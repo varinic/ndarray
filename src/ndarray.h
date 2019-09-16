@@ -1,14 +1,21 @@
 
+
+
 #ifndef NDARRAY_H
 #define NDARRAY_H
 
-#include <cassert>
-#include "Type.h"
 
-namespace std{
+#include "data.h"
+#include <cassert>
+#include <iostream>
+
+
+
+namespace np{
   
   template <typename T>
-  class ndarray{
+  class ndarray : public data
+  {
     public :
       typedef T* iterator;
       ndarray():_start(nullptr),_finish(nullptr),_end_of_storage(nullptr)
@@ -50,7 +57,14 @@ namespace std{
         return *this;
       }
 
-    protect:
+      void print(){
+        for(size_t i=0;i<size();i++){
+          std::cout<<*(_start+i)<<" ";
+        }
+        std::cout<<std::endl;
+      }
+
+    protected:
       size_t size()const{
         return _finish - _start;
       }
@@ -59,7 +73,7 @@ namespace std{
         return _end_of_storage - _start;
       }
 
-      bool empty()const{
+      bool isempty()const{
         return _start == _finish;
       }
 
@@ -97,9 +111,9 @@ namespace std{
       iterator _start;
       iterator _finish;
       iterator _end_of_storage;
-      Type _dtype;
+
       
-  }
+  };
 }
 
 
