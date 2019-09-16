@@ -1,9 +1,11 @@
 
+cc=g++
 
 
-test:main.cc
-	g++ $^ -o $@ -std=c++11
-
+test:main.o
+	${cc} $^ -o $@ -std=c++11
+main.o:main.cc
+	${cc} $^ -c
 
 .PHONY: clean
 

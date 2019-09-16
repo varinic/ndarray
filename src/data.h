@@ -8,7 +8,6 @@
 
 namespace np{
 
-  //template<typename T>
   class data {
     private :
       std::string _dtype;
