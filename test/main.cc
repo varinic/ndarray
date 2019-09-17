@@ -46,6 +46,57 @@ int main(){
   }
   f.print_shape();
 
+  std::vector<size_t> shape {3,4};
+
+  ndarray <np::float64> g;
+  g.empty(shape);
+  g.print_all();
+  g.ones(shape);
+  g.print_all();
+  g.zeros(shape);
+  g.print_all();
+  g.arange(10);
+  g.print_all();
+  g.arange(1,10,2);
+  g.print_all();
+  for(size_t i=0;i<5;i++){
+    printcm(g.at(i));
+  }
+  println();
+
+  ndarray <np::float64> h;
+  h.arange(72);
+  std::vector<size_t> shape1 {2,3,4,3};
+  h.reshape(shape1);
+  h.print_all();
+  for(size_t i=0;i<2;i++){
+    for(size_t j=0;j<3;j++){
+      for(size_t k=0;k<4;k++){
+        for(size_t l=0;l<3;l++){
+          printcm(h.at(i,j,k,l));
+        }
+    println();
+      }
+    println();
+    }
+    println();
+  }
+  std::vector<size_t> shape11 {8,9};
+  h.reshape(shape11);
+  h.print_all();
+
+  ndarray <np::float64> p;
+  p.arange(6);
+  std::vector<size_t> shape2 {2,3};
+  p.reshape(shape2);
+  p.print_all();
+  for(size_t i=0;i<2;i++){
+    for(size_t j=0;j<3;j++){
+      printcm(p.at(i,j));
+    }
+    println();
+  }
+
 
 
   return 0;
