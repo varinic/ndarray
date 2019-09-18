@@ -184,7 +184,7 @@ namespace np{
         return _start == _finish;
       }
 
-      void clear()const{
+      void clear(){
         _finish = _start;
         _ndim=0;
         _shape.clear();
