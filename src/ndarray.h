@@ -223,6 +223,17 @@ namespace np{
 
       }
 
+      void swapaxes(size_t axis1,size_t axis2);
+      void get_suffix_product(){
+        assert(0<_ndim);
+        _suffix_product.clear();
+        size_t product=1;
+        for(size_t i=_ndim-1;i>0;i--){
+          product*=Shape[i];
+          _suffix_product.push_back(product);
+        }
+        std::reverse(_suffix_product.begin(),_suffix_product.end());
+      }
 
     private:
       iterator _start;
@@ -402,6 +413,34 @@ namespace np{
     //_finish=_start+size_ndarray;
     //_end_of_storage=_start+size_ndarray;
 
+  }
+
+  template<typename T>
+  void ndarray<T>:: swapaxes(size_t axis1,size_t axis2){
+    assert( 0<=axis1 && axis1<_shape.size() && 0<=axis2 && axis2<_shape.size() )
+    if(axis1 != axis2){
+      iterator t_start = new T [this->size()*sizeof(T)];
+
+
+
+      size_t tmp;
+      tmp=_shape[axis1];
+      _shape[axis1]=_shape[axis2];
+      _shape[axis2]=tmp;
+      get_suffix_product();
+      _start=t_start;
+      _finish=_start+this->size();
+      _end_of_storage=_start+this->size();
+
+
+        for(size_t i =0;i<size;i++){
+          _start[i]=data;
+        }
+        _finish=_start+size;
+        _end_of_storage=_start+size;
+        _ndim=1;
+        _shape.push_back(size);
+    }
   }
 
   template<typename T>
