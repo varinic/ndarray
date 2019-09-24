@@ -96,7 +96,17 @@ int main(){
     }
     println();
   }
+  p.swapaxes(0,1);
+  p.print_all();
 
+  print("------------------");
+  ndarray <np::float64> q;
+  q.arange(24);
+  std::vector<size_t> shape3 {4,3,2};
+  q.reshape(shape3);
+  q.print_all();
+  q.swapaxes(0,2);
+  q.print_all();
 
 
   return 0;

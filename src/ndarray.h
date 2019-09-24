@@ -174,6 +174,8 @@ namespace np{
 
       }
 
+      void swapaxes(size_t axis1,size_t axis2);
+
     protected:
 
       size_t capacity()const{
@@ -223,17 +225,34 @@ namespace np{
 
       }
 
-      void swapaxes(size_t axis1,size_t axis2);
       void get_suffix_product(){
         assert(0<_ndim);
         _suffix_product.clear();
         size_t product=1;
+        _suffix_product.push_back(product);
         for(size_t i=_ndim-1;i>0;i--){
-          product*=Shape[i];
+          product*=_shape[i];
           _suffix_product.push_back(product);
         }
         std::reverse(_suffix_product.begin(),_suffix_product.end());
       }
+
+      void get_suffix_product(std::vector<size_t> &t_suffix_product,const std::vector<size_t> &t_shape){
+        assert(0<t_shape.size());
+        t_suffix_product.clear();
+        size_t product=1;
+        t_suffix_product.push_back(product);
+        for(size_t i=t_shape.size()-1;i>0;i--){
+          product*=t_shape[i];
+          t_suffix_product.push_back(product);
+        }
+        std::reverse(t_suffix_product.begin(),t_suffix_product.end());
+      }
+
+
+      void _swapaxes(iterator &t_start,
+                     const std::vector<size_t> &t_suffix_product, 
+                     const size_t depth,const size_t count,size_t &index );
 
     private:
       iterator _start;
@@ -416,30 +435,49 @@ namespace np{
   }
 
   template<typename T>
+  void ndarray<T>:: _swapaxes(iterator &t_start,
+      const std::vector<size_t> &t_suffix_product, 
+      const size_t depth,const size_t count,size_t &index ){
+    assert (depth < _shape.size());
+    if(depth == _shape.size() -1){
+      for(size_t i=0;i<_shape[depth];i++){
+        t_start[count+i*t_suffix_product[depth]] = _start[index++];
+      }
+    }
+    else{
+      for(size_t i=0;i<_shape[depth];i++){
+        _swapaxes(t_start,t_suffix_product,depth+1,count+i*t_suffix_product[depth],index);
+      }
+    }
+  }
+
+  template<typename T>
   void ndarray<T>:: swapaxes(size_t axis1,size_t axis2){
-    assert( 0<=axis1 && axis1<_shape.size() && 0<=axis2 && axis2<_shape.size() )
+    assert( 0<=axis1 && axis1<_shape.size() && 0<=axis2 && axis2<_shape.size() );
     if(axis1 != axis2){
       iterator t_start = new T [this->size()*sizeof(T)];
 
-
-
+      std::vector<size_t> t_shape=_shape;
       size_t tmp;
-      tmp=_shape[axis1];
-      _shape[axis1]=_shape[axis2];
-      _shape[axis2]=tmp;
+      tmp=t_shape[axis1];
+      t_shape[axis1]=t_shape[axis2];
+      t_shape[axis2]=tmp;
+      std::vector<size_t> t_suffix_product;
+      get_suffix_product(t_suffix_product,t_shape);
+      tmp=t_suffix_product[axis1];
+      t_suffix_product[axis1]=t_suffix_product[axis2];
+      t_suffix_product[axis2]=tmp;
+      size_t index=0;
+      _swapaxes(t_start,t_suffix_product,0,0,index);
+      std::cout<<"index == "<<index<<" size == "<<this->size() <<std::endl;
+
+      _shape=t_shape;
       get_suffix_product();
+      size_t size = this->size();
+      delete[] _start;
       _start=t_start;
-      _finish=_start+this->size();
-      _end_of_storage=_start+this->size();
-
-
-        for(size_t i =0;i<size;i++){
-          _start[i]=data;
-        }
-        _finish=_start+size;
-        _end_of_storage=_start+size;
-        _ndim=1;
-        _shape.push_back(size);
+      _finish=_start+size;
+      _end_of_storage=_start+size;
     }
   }
 
