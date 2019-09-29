@@ -51,7 +51,7 @@ namespace np{
         }
       }
 
-      ndarray<T> & operator=(const ndarray<T> & array){
+      const ndarray<T> & operator=(const ndarray<T> & array){
         if(this != &array){
           std::cout<<"*this != array"<<std::endl;
           if(_start != nullptr){
