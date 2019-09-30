@@ -107,6 +107,18 @@ int main(){
   q.print_all();
   q.swapaxes(0,2);
   q.print_all();
+  q.append({233,322,233});
+  q.print_all();
+  q.append({});
+  q.print_all();
+
+  print("------------------");
+  ndarray <np::float64> r {1.23,4.56,7.89};
+  r.print_all();
+
+  print("------------------");
+  ndarray <np::float64> rr {};
+  rr.print_all();
 
 
   return 0;

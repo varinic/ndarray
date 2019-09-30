@@ -21,8 +21,9 @@ namespace np{
   {
     public :
       typedef T* iterator;
-      ndarray():_start(nullptr),_finish(nullptr),_end_of_storage(nullptr),_ndim(0)
-      {}
+      ndarray():_start(nullptr),_finish(nullptr),_end_of_storage(nullptr),_ndim(0){
+        std::cout<<"from nullptr"<<std::endl;
+      }
       ndarray(size_t size,T data=T()){
         _start = new T [size*sizeof(T)];
         for(size_t i =0;i<size;i++){
@@ -44,6 +45,20 @@ namespace np{
         _ndim=array._ndim;
         _shape=array._shape;
         _suffix_product=array._suffix_product;
+      }
+      ndarray(const std::initializer_list<T> & lst){
+        size_t t_size= lst.size();
+        _start = new T[sizeof(T)*t_size];
+        size_t i=0;
+        std::cout<<"from initializer"<<std::endl;
+        for(auto tmp : lst){
+          _start[i]=tmp;
+          i++;
+        }
+        _finish=_start+t_size;
+        _end_of_storage=_start+t_size;
+        _ndim=1;
+        _shape.push_back(t_size);
       }
       ~ndarray(){
         if(_start != nullptr){
@@ -175,7 +190,9 @@ namespace np{
       }
 
       void swapaxes(size_t axis1,size_t axis2);
+      void append(const std::initializer_list<T> & lst);
 
+      
     protected:
 
       size_t capacity()const{
@@ -478,6 +495,36 @@ namespace np{
       _start=t_start;
       _finish=_start+size;
       _end_of_storage=_start+size;
+    }
+  }
+
+  template<typename T>
+  void ndarray<T>:: append(const std::initializer_list<T> & lst){
+    if(lst.size()){
+      size_t t_size=lst.size();
+      size_t r_size=size();
+
+      iterator t_start= new T [sizeof(T)* (t_size+r_size)];
+      size_t i=0;
+      for( i =0;i<r_size;i++){
+        t_start[i]=_start[i];
+      }
+      for( auto tmp : lst){
+        t_start[i]=tmp;
+        i++;
+      }
+      if(_start != nullptr){
+        delete [] _start;
+      }
+      _start=t_start;
+      _finish=_start+t_size+r_size;
+      _end_of_storage=_start+t_size+r_size;
+      _ndim=1;
+      _shape.clear();
+      _shape.push_back((t_size+r_size));
+    }
+    else{
+      std::cout<<"lst is empty!"<<std::endl;
     }
   }
 
