@@ -169,6 +169,13 @@ namespace np{
         }
         std::cout<<"]"<<std::endl;
       }
+      void print_array(){
+        std::cout<<"[ ";
+        for(size_t i=0;i<size();i++){
+          std::cout<<*(_start+i)<<", ";
+        }
+        std::cout<<"]"<<std::endl;
+      }
       void print_shape(){
         std::cout<<"shape:[ ";
         for(size_t i=0;i<_shape.size();i++){
