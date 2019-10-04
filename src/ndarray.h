@@ -25,6 +25,7 @@ namespace np{
         std::cout<<"from nullptr"<<std::endl;
       }
       ndarray(size_t size,T data=T()){
+        assert(0 < size);
         _start = new T [size*sizeof(T)];
         for(size_t i =0;i<size;i++){
           _start[i]=data;
